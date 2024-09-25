@@ -9,7 +9,10 @@ export class FrigorificoService extends BaseService<FrigorificoEntity> {
     }
 
     async findAllFrigorifico(): Promise<FrigorificoEntity[]>{
-        return (await this.execRepository).find();
+        return (await this.execRepository)
+            .createQueryBuilder("frigorifico")
+            .orderBy('frigorifico.name', 'ASC')
+            .getMany();
     }
 
     async findFrigorificoById(id: string):Promise<FrigorificoEntity | null>{

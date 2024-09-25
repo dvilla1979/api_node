@@ -56,7 +56,7 @@ export class FrigorificoController {
         }
     }
 
-    async updtaeFrigorifico(req: Request, res: Response){
+    async updateFrigorifico(req: Request, res: Response){
         const {id} = req.params; 
         try{
             const data: UpdateResult = await this.frigorificoService.updateFrigorifico(id, req.body);

@@ -28,6 +28,7 @@ export class UserMiddleware extends SharedMiddleware {
         
         validate(valid).then((err)=>{
             if (err.length > 0) {
+                console.log("Hola desde Error validator usuario", err)
                 return this.httpResponse.Error(res, err)
             }
             else {

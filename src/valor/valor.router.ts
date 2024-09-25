@@ -13,7 +13,7 @@ export class ValorRouter extends BaseRouter<ValorController, ValorMiddleware>{
             this.controller.getValoresSensor(req, res)
         );
 
-        //Con el id del frigorifico devuelve el ultimo valor de cada sensordel frigorifico
+        //Con el id del frigorifico devuelve el ultimo valor de cada sensor del frigorifico
         this.router.get('/valoresfrio', (req, res) => 
             this.controller.getValoresSensorbyFrio(req, res)
         );

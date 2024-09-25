@@ -1,8 +1,9 @@
-import { DeleteResult, UpdateResult } from "typeorm";
+import { DeleteResult } from "typeorm";
 import { BaseService } from "../../config/base.service";
 import { RoleType, UserDTO } from "../dto/user.dto";
 import { UserEntity } from "../entities/user.entity";
 import * as bcrypt from 'bcrypt';
+import { FrigorificoDTO } from '../../frigorifico/dto/frigorifico.dto';
 
 export class UserService extends BaseService<UserEntity> {
     constructor(){
@@ -29,12 +30,19 @@ export class UserService extends BaseService<UserEntity> {
         return user;
       }
 
-    async findUserByRelations(id: string): Promise<UserEntity | null>{
+    async findUserFrigorificosById(id: string): Promise<UserEntity | null>{
         return (await this.execRepository)
             .createQueryBuilder("user")
             .leftJoinAndSelect("user.frigorifico", "frigorifico")
             .where({id})
             .getOne();
+    }
+
+    async findAllUsersFrigorificos(): Promise<UserEntity[] | null>{
+        return (await this.execRepository)
+            .createQueryBuilder("user")
+            .leftJoinAndSelect("user.frigorifico", "frigorifico")
+            .getMany();
     }
     
     async findUserByEmail(email: string):Promise<UserEntity | null>{
@@ -66,8 +74,39 @@ export class UserService extends BaseService<UserEntity> {
         return (await this.execRepository).delete({id});
     }
 
-    async updateUser(id: string, infoUpdate: UserDTO):Promise<UpdateResult>{
-        return (await this.execRepository).update(id, infoUpdate);
-    }
+    async updateUser(id: string, infoUpdate: UserDTO, friosUpdate: FrigorificoDTO[]):Promise<UserEntity | null>{
+        const User = await this.findUserById(id);
+        const UserPas = await this.findUserByUsername(User!.username); //Recupera password
+
+        var Userupdate = {};
+
+        Userupdate = {id: UserPas!.id}
+
+        if(UserPas!.username !== infoUpdate.username)
+           Userupdate = {...Userupdate, username: infoUpdate.username}
+        if(UserPas!.name !== infoUpdate.name)
+            Userupdate = {...Userupdate, name: infoUpdate.name}
+        if(UserPas!.lastname !== infoUpdate.lastname)
+            Userupdate = {...Userupdate, lastname: infoUpdate.lastname}
+        if(UserPas!.email !== infoUpdate.email)
+            Userupdate = {...Userupdate, email: infoUpdate.email}  
+        if(infoUpdate.password) {
+            const isMatch = await bcrypt.compare(UserPas!.password, infoUpdate.password);
+            if(isMatch === false) {
+                const hash = await bcrypt.hash(infoUpdate.password, 10);
+                Userupdate = {...Userupdate, password: hash}
+            }
+        }
+        if(UserPas!.jobPositions !== infoUpdate.jobPositions)
+            Userupdate = {...Userupdate, jobPositions: infoUpdate.jobPositions}  
+        if(UserPas!.numberPhone !== infoUpdate.numberPhone)
+            Userupdate = {...Userupdate, numberPhone: infoUpdate.numberPhone}  
+        if(UserPas!.role !== infoUpdate.role)
+            Userupdate = {...Userupdate, role: infoUpdate.role}  
+        if(UserPas!.frigorifico !== friosUpdate)
+            Userupdate = {...Userupdate, frigorifico: friosUpdate}
+             
+        return (await this.execRepository).save(Userupdate);
+}
 
 }

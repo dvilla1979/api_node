@@ -13,6 +13,7 @@ export class AuthController extends AuthService {
         try {
           
             const userEncode = req.user as UserEntity;
+            //const userEncode = req.body as UserEntity;
             const encode = await this.generateJWT(userEncode);
 
             if(!encode){ 

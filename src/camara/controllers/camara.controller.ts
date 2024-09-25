@@ -14,6 +14,7 @@ export class CamaraController {
         try{
             //const name:string = req.params.name_frio as string; 
             const frioId = req.query.frioId as string; 
+           
             const data_frio = await this.frigorificoService.findFrigorificoById(frioId);
             if (!data_frio) {
                 return this.httpresponse.NotFound(res, "No existe el frigorifico registrado");
@@ -85,7 +86,7 @@ export class CamaraController {
         }
     }
 
-    async updtaeCamara(req: Request, res: Response){
+    async updateCamara(req: Request, res: Response){
         const {id} = req.params; 
         try{
             const data: UpdateResult = await this.camaraService.updateCamara(id, req.body);

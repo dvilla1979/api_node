@@ -13,6 +13,25 @@ export class SensorController {
         private readonly httpresponse: HttpResponse = new HttpResponse()
     ) {}
 
+    async getSensoresCamaraById(req: Request, res: Response){
+        try{
+            const camaraId:string = req.query.camaraId as string; 
+            const data_camara = await this.camaraService.findCamaraById(camaraId);
+            if (!data_camara) {
+                return this.httpresponse.NotFound(res, "No existe la camaras registrada");
+            }
+            const data = await this.sensorService.findAllSensorCamara(data_camara.id);
+            if (data.length === 0) {
+                return this.httpresponse.NotFound(res, "No hay sensores registradas");
+            }
+
+            return this.httpresponse.OK(res, data);
+        }catch(err){
+            console.log(err);
+            return this.httpresponse.Error(res, err);
+        }
+    }
+
     async getSensoresFrigorifico(req: Request, res: Response){
         try{
             const name_frio:string = req.query.name_frio as string; 
@@ -95,6 +114,7 @@ export class SensorController {
 
     async createSensor(req: Request, res: Response){
         try{
+            console.log("req.body", req.body);
             const frio_id:string = req.body.frigorifico as string; 
             const data_frio = await this.frigorificoService.findFrigorificoById(frio_id);
             if (!data_frio) {
@@ -119,10 +139,10 @@ export class SensorController {
         }
     }
 
-    async updtaeCamara(req: Request, res: Response){
+    async updateSensor(req: Request, res: Response){
         const {id} = req.params; 
         try{
-            const data: UpdateResult = await this.camaraService.updateCamara(id, req.body);
+            const data: UpdateResult = await this.sensorService.updateSensor(id, req.body);
             if (!data.affected) {
                 return this.httpresponse.NotFound(res, "Hay un error en actualizar");
             }
@@ -133,10 +153,10 @@ export class SensorController {
     }
 
 
-    async deleteCamara(req: Request, res: Response){
+    async deleteSensor(req: Request, res: Response){
         const {id} = req.params; 
         try{
-            const data: DeleteResult = await this.camaraService.deleteCamara(id);
+            const data: DeleteResult = await this.sensorService.deleteSensor(id);
             if (!data.affected) {
                 return this.httpresponse.NotFound(res, "Hay un error en borrar");
             }

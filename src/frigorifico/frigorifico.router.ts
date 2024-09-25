@@ -24,7 +24,7 @@ export class FrigorificoRouter extends BaseRouter<FrigorificoController, Frigori
             (req, res) => this.controller.createFrigorifico(req, res)
         );
         this.router.put('/updateFrigorifico/:id', (req, res) => 
-            this.controller.updtaeFrigorifico(req, res)
+            this.controller.updateFrigorifico(req, res)
         );
         this.router.delete('/deleteFrigorifico/:id', (req, res) => 
             this.controller.deleteFrigorifico(req, res)

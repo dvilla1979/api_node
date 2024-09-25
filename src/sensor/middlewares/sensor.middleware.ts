@@ -11,8 +11,6 @@ export class SensorMiddleware {
     sensorValidator(req: Request, res: Response, next: NextFunction){
         const {name_db, name_front, descripcion, tipo_dato, tipo_sensor, color_front} =
             req.body;
-        
-
         const valid = new SensorDTO();
 
         valid.name_db = name_db;
@@ -24,13 +22,25 @@ export class SensorMiddleware {
         
         validate(valid).then((err)=>{
             if (err.length > 0) {
+                console.log("no validadadp", req.body);
                 return this.httpResponse.Error(res, err)
             }
             else {
+                console.log("validadadp", req.body);
                 next();
             }
         })
 
+    }
+
+    identifyRequest(req: Request, res: Response, next: NextFunction){
+        const apiKey = req.headers['api-key'];
+        if(apiKey && apiKey === "clave secreta"){
+            next()
+        }
+        else{
+            return this.httpResponse.Unauthorized(res)
+        }
     }
 
 }

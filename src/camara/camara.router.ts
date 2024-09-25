@@ -24,7 +24,7 @@ export class CamaraRouter extends BaseRouter<CamaraController, CamaraMiddleware>
             '/createCamara',
             (req, res, next) => this.middleWare.camaraValidator(req, res, next), 
             (req, res) => this.controller.createCamara(req, res));
-      //  this.router.put('/updateFrigorifico/:id', (req, res) => this.controller.updtaeFrigorifico(req, res));
-      ///  this.router.delete('/deleteFrigorifico/:id', (req, res) => this.controller.deleteFrigorifico(req, res));
+        this.router.put('/updateCamara/:id', (req, res) => this.controller.updateCamara(req, res));
+        this.router.delete('/deleteCamara/:id', (req, res) => this.controller.deleteCamara(req, res));
     }
 } 

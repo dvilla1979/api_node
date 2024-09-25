@@ -42,6 +42,7 @@ export class SensorService extends BaseService<SensorEntity> {
         return (await this.execRepository).save(body);
     }
 
+    //Para borrar un sensor, primero hay que borrar todos los valores asociados a ese sensor
     async deleteSensor(id: string):Promise<DeleteResult>{
         return (await this.execRepository).delete({id});
     }

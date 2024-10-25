@@ -19,7 +19,8 @@ export class FrigorificoRouter extends BaseRouter<FrigorificoController, Frigori
             this.controller.getFrigorificoByName(req, res)
         );
         this.router.post(
-            '/createFrigorifico', 
+            '/createFrigorifico',  
+            this.middleWare.passAuth("jwt"),
             (req, res, next) => this.middleWare.frigorificoValidator(req, res, next),
             (req, res) => this.controller.createFrigorifico(req, res)
         );

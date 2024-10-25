@@ -48,16 +48,16 @@ class ServerBootstrap extends ConfigServer {
     async dbConnect():Promise<DataSource | void> {
         return this.initConnect
             .then(()=>{
-                    console.log("Connect Success");
+                    console.log("Conexión exitosa a base de datos");
             }).catch((err)=>{
-                    console.error(err);
+                    console.error("Error al conectar a base de datos",err);
             });
     }
 
 
     public listen() {
         this.app.listen(this.port, ()=>{
-            console.log("Server listenning on port =>", this.port);
+            console.log("Servidor escuchando en el puerto =>", this.port);
         })
     }
 }

@@ -24,7 +24,8 @@ export class SensorRouter extends BaseRouter<SensorController, SensorMiddleware>
         //this.router.get('/frio_name/:name_frio/camara_id/:id', (req, res) => this.controller.getCamaraById(req, res));
         //this.router.get('/frio_name/:name_frio/camara_name/:name_camara', (req, res) => this.controller.getCamaraByName(req, res));
         this.router.post(
-            '/createSensor', 
+            '/createSensor',
+            this.middleWare.passAuth("jwt"), 
             (req, res, next) => this.middleWare.sensorValidator(req, res, next),
             (req, res) => this.controller.createSensor(req, res)
         );

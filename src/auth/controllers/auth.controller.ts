@@ -11,7 +11,7 @@ export class AuthController extends AuthService {
     //Funcion encargada de hacer la autenticacion
     async login(req: Request, res: Response) {
         try {
-          
+           
             const userEncode = req.user as UserEntity;
             //const userEncode = req.body as UserEntity;
             const encode = await this.generateJWT(userEncode);

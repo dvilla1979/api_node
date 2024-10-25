@@ -15,16 +15,14 @@ export class CamaraMiddleware  extends SharedMiddleware  {
 
     camaraValidator(req: Request, res: Response, next: NextFunction){
         const { name } =
-            req.body;
-        
-
+            req.body;      
         const valid = new CamaraDTO();
 
         valid.name = name;
         
         validate(valid).then((err)=>{
             if (err.length > 0) {
-                return this.httpResponse.Error(res, err)
+                return this.httpResponse.NotAcceptable(res, err)
             }
             else {
                 next();

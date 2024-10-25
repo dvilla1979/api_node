@@ -20,7 +20,7 @@ export class ValorMiddleware {
         
         validate(valid).then((err)=>{
             if (err.length > 0) {
-                return this.httpResponse.Error(res, err)
+                return this.httpResponse.NotAcceptable(res, err)
             }
             else {
                 next();
@@ -62,7 +62,7 @@ export class ValorMiddleware {
         
         this.validateValores(arrayValid).then((err)=>{
             if (err.length > 0) {
-                return this.httpResponse.Error(res, err)
+                return this.httpResponse.NotAcceptable(res, err)
             }
             else {
                 next();

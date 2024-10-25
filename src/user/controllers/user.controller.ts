@@ -53,6 +53,7 @@ export class UserController {
             }
             return this.httpresponse.OK(res, data);
         }catch(err){
+
             return this.httpresponse.Error(res, err);
         }
     }

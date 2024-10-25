@@ -8,7 +8,7 @@ export enum HttpStatus {
     INTERNAL_SERVER_ERROR = 500,
 //    BAD_REQUEST = 400,
 //    CONFLICT = 409,
-//    NOT_ACCEPTABLE = 406,
+    NOT_ACCEPTABLE = 406,
 //    NOT_IMPLEMENTED = 501,
 }
 
@@ -27,6 +27,15 @@ export class HttpResponse {
             {
                 status: HttpStatus.NOT_FOUND,
                 statusMsg: "Not Found",
+                error: data
+            });
+    }
+
+    NotAcceptable(res: Response, data?: any): Response{
+        return res.status(HttpStatus.NOT_ACCEPTABLE).json(
+            {
+                status: HttpStatus.NOT_ACCEPTABLE,
+                statusMsg: "Not Accpetable",
                 error: data
             });
     }

@@ -22,6 +22,7 @@ export class CamaraRouter extends BaseRouter<CamaraController, CamaraMiddleware>
         );
         this.router.post(
             '/createCamara',
+            this.middleWare.passAuth("jwt"),
             (req, res, next) => this.middleWare.camaraValidator(req, res, next), 
             (req, res) => this.controller.createCamara(req, res));
         this.router.put('/updateCamara/:id', (req, res) => this.controller.updateCamara(req, res));

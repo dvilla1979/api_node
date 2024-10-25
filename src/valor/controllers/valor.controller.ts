@@ -138,9 +138,9 @@ export class ValorController {
             const fechaInicio = moment(req.query.fechaInicio as Date | undefined).toDate(); //as Date | undefined;
             const fechaFin = moment(req.query.fechaFin as Date | undefined).toDate();
 
-            console.log("CamaraId", camaraId)
-            console.log("Fecha inicio", fechaInicio)
-            console.log("Fecha fin", fechaFin)
+          //  console.log("CamaraId", camaraId)
+          //  console.log("Fecha inicio", fechaInicio)
+         //   console.log("Fecha fin", fechaFin)
 
             const data_camara = await this.camaraService.findCamaraById(camaraId);
            

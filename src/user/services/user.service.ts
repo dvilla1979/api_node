@@ -34,6 +34,7 @@ export class UserService extends BaseService<UserEntity> {
         return (await this.execRepository)
             .createQueryBuilder("user")
             .leftJoinAndSelect("user.frigorifico", "frigorifico")
+            .orderBy('frigorifico.name', 'ASC')
             .where({id})
             .getOne();
     }
@@ -42,6 +43,7 @@ export class UserService extends BaseService<UserEntity> {
         return (await this.execRepository)
             .createQueryBuilder("user")
             .leftJoinAndSelect("user.frigorifico", "frigorifico")
+            .orderBy('frigorifico.name', 'ASC')
             .getMany();
     }
     

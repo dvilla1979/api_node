@@ -2,11 +2,16 @@ import { NextFunction, Request, Response } from "express";
 import { validate } from "class-validator";
 import { HttpResponse } from "../../shared/response/http.response";
 import { SensorDTO } from "../dto/sensor.dto";
+import { SharedMiddleware } from "../../shared/middlewares/shared.middleware";
 
-export class SensorMiddleware {
+export class SensorMiddleware  extends SharedMiddleware {
 
-    constructor( private readonly httpResponse: HttpResponse = new HttpResponse()
-    ){}
+   /* constructor( private readonly httpResponse: HttpResponse = new HttpResponse()
+    ){}*/
+
+   constructor(){
+    super();
+}
 
     sensorValidator(req: Request, res: Response, next: NextFunction){
         const {name_db, name_front, descripcion, tipo_dato, tipo_sensor, color_front} =
@@ -22,11 +27,9 @@ export class SensorMiddleware {
         
         validate(valid).then((err)=>{
             if (err.length > 0) {
-                console.log("no validadadp", req.body);
-                return this.httpResponse.Error(res, err)
+                return this.httpResponse.NotAcceptable(res, err)
             }
             else {
-                console.log("validadadp", req.body);
                 next();
             }
         })

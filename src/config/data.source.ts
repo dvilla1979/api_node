@@ -19,9 +19,11 @@ const Config: DataSourceOptions = {
   entities: [__dirname + "/../**/*.entity{.ts,.js}"],
   migrations: [__dirname + "/../migrations/*{.ts,.js}"],
   synchronize: false,
-  migrationsRun: true,
+  //En el servidor tiene que estar en false para que funcione, de manera local funciona con true
+  migrationsRun: false,
   logging: false,
   namingStrategy: new SnakeNamingStrategy(),
 };
+
 
 export const AppDataSource: DataSource = new DataSource(Config);

@@ -61,6 +61,8 @@ export class UserController {
 
     async createUser(req: Request, res: Response){
         try{
+            //**FALTA ASEGURARSE QUE EL USUARIO NO EXISTE***
+            //Se puede utilizar finduser 
             const data = await this.userService.createUser(req.body);
             return this.httpresponse.OK(res, data);
         }catch(err){

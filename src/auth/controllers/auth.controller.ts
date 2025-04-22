@@ -22,6 +22,7 @@ export class AuthController extends AuthService {
 
             res.header('Content-Type', 'application/json');
             res.cookie("accessToken", encode.accessToken, {maxAge: 60000 * 60}); //Una hora dura la sesion despues la cookie cierra la sesion
+                                                                                 //en este caso no se utiliza sesiones   
             res.write(JSON.stringify(encode));
             res.end();
 

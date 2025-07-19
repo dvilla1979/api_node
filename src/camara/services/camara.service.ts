@@ -13,7 +13,8 @@ export class CamaraService extends BaseService<CamaraEntity> {
             .createQueryBuilder("camara")
             .leftJoinAndSelect("camara.frigorifico", "camaras")
             .where({frigorifico})
-            .orderBy('camara.name', 'ASC')
+ //           .orderBy('camara.name', 'ASC')
+            .orderBy('camara.orden', 'ASC')
             .getMany();
     }
 

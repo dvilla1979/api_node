@@ -36,7 +36,8 @@ export class ValorRouter extends BaseRouter<ValorController, ValorMiddleware>{
             (req, res) => this.controller.createValores(req, res)
         );
 
+
         //this.router.put('/updateUser/:id', (req, res) => this.controller.updateUser(req, res));
-        //this.router.delete('/deleteUser/:id', (req, res) => this.controller.deleteUser(req, res));
+        this.router.delete('/deleteValores/:sensor_id', (req, res) => this.controller.deleteValores(req, res));
     }
 } 

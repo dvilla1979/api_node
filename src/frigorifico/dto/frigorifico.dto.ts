@@ -4,4 +4,7 @@ import { BaseDTO } from "../../config/base.dto";
 export class FrigorificoDTO extends BaseDTO {
     @IsNotEmpty()
     name!: string;
+
+    @IsNotEmpty()
+    orden!: string;
 }

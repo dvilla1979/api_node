@@ -13,17 +13,18 @@ export class FrigorificoMiddleware extends SharedMiddleware {
         super();
     }
     frigorificoValidator(req: Request, res: Response, next: NextFunction){
-        const { name } =
+        const { name, orden } =
             req.body;
         
 
         const valid = new FrigorificoDTO();
 
         valid.name = name;
+        valid.orden = orden;
         
         validate(valid).then((err)=>{
             if (err.length > 0) {
-                return this.httpResponse.NotAcceptable(res, err)
+                return this.httpResponse.NotAcceptable(res, "Faltan datos o son invalidos")
             }
             else {
                 next();

@@ -14,15 +14,16 @@ export class CamaraMiddleware  extends SharedMiddleware  {
     }
 
     camaraValidator(req: Request, res: Response, next: NextFunction){
-        const { name } =
+        const { name, orden } =
             req.body;      
         const valid = new CamaraDTO();
 
         valid.name = name;
+        valid.orden = orden;
         
         validate(valid).then((err)=>{
             if (err.length > 0) {
-                return this.httpResponse.NotAcceptable(res, err)
+                return this.httpResponse.NotAcceptable(res, "Faltan datos o son invalidos")
             }
             else {
                 next();

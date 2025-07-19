@@ -60,11 +60,14 @@ export class UserController {
 
 
     async createUser(req: Request, res: Response){
+        const {username} = req.body;
         try{
-            //**FALTA ASEGURARSE QUE EL USUARIO NO EXISTE***
-            //Se puede utilizar finduser 
-            const data = await this.userService.createUser(req.body);
-            return this.httpresponse.OK(res, data);
+            const data = await this.userService.findUserByUsername(username);
+            if(data){
+                return this.httpresponse.NotAcceptable(res, "Ya existe el usuario");
+            }
+            const dataNew = await this.userService.createUser(req.body);
+            return this.httpresponse.OK(res, dataNew);
         }catch(err){
             return this.httpresponse.Error(res, err);
         }

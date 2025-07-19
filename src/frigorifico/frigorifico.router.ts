@@ -9,7 +9,7 @@ export class FrigorificoRouter extends BaseRouter<FrigorificoController, Frigori
     }
 
     routes(): void {
-        this.router.get('/frigorificos', this.middleWare.passAuth("jwt") ,(req, res) => 
+        this.router.get('/frigorificos'/*, this.middleWare.passAuth("jwt") */,(req, res) => 
             this.controller.getFrigorificos(req, res)
         );
         this.router.get('/frigorifico/:id', (req, res) => 

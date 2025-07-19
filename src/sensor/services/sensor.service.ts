@@ -22,7 +22,8 @@ export class SensorService extends BaseService<SensorEntity> {
             .createQueryBuilder("sensor")
             .leftJoinAndSelect("sensor.camara", "sensors")
             .where({camara})
-            .orderBy('sensor.name_front', 'ASC')
+//            .orderBy('sensor.name_front', 'ASC')
+            .orderBy('sensor.orden', 'ASC')
             .getMany();
     }
 

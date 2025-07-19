@@ -1,11 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from "../../config/base.entity";
 import { SensorEntity } from "../../sensor/entities/sensor.entity";
 
 @Entity({name: "valor"})
+@Index('idx_sensor_fecha', ['sensor.id', 'fecha_hora_value']) // <-- esto crea el índice
 export class ValorEntity extends BaseEntity {
 
-    @Column()
+    @Column({ length: 20 })
     value!: string;
 
     @Column()

@@ -11,7 +11,8 @@ export class FrigorificoService extends BaseService<FrigorificoEntity> {
     async findAllFrigorifico(): Promise<FrigorificoEntity[]>{
         return (await this.execRepository)
             .createQueryBuilder("frigorifico")
-            .orderBy('frigorifico.name', 'ASC')
+            //.orderBy('frigorifico.name', 'ASC')
+            .orderBy('frigorifico.orden', 'ASC')
             .getMany();
     }
 

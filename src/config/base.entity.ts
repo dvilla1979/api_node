@@ -5,7 +5,7 @@ export abstract class BaseEntity{
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @CreateDateColumn({
+  /*  @CreateDateColumn({
         name:"created_at",
         type: "timestamp",
     })
@@ -15,5 +15,5 @@ export abstract class BaseEntity{
         name:"updated_at",
         type: "timestamp",
     })
-    updatedAt!: Date;
+    updatedAt!: Date;*/
 }

@@ -20,6 +20,14 @@ export class SensorDTO extends BaseDTO {
     @IsNotEmpty()
     color_front!: SensorColor;
 
+    @IsNotEmpty()
+    max_grafico!: number;
+
+    @IsNotEmpty()
+    min_grafico!: number;
+
+    @IsNotEmpty()
+    orden!: string;
 }
 
 export enum SensorDato{

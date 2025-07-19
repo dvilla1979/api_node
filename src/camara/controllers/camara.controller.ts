@@ -20,9 +20,9 @@ export class CamaraController {
                 return this.httpresponse.NotFound(res, "No existe el frigorifico registrado");
             }
             const data = await this.camaraService.findAllCamara(data_frio.id);
-            if (data.length === 0) {
+         /*   if (data.length === 0) {
                 return this.httpresponse.NotFound(res, "No hay camaras registradas");
-            }
+            }*/
             return this.httpresponse.OK(res, data);
         }catch(err){
             console.log(err);

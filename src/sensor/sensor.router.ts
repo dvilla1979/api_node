@@ -30,6 +30,7 @@ export class SensorRouter extends BaseRouter<SensorController, SensorMiddleware>
             (req, res) => this.controller.createSensor(req, res)
         );
         this.router.put('/updateSensor/:id', (req, res) => this.controller.updateSensor(req, res));
-        this.router.delete('/deleteSensor/:id', (req, res) => this.controller.deleteSensor(req, res));
+        this.router.delete('/deleteSensor/:id', (req, res) => {
+            this.controller.deleteSensor(req, res)});
     }
 } 

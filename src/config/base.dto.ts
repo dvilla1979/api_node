@@ -7,11 +7,11 @@ export class BaseDTO {
     @IsOptional()
     id!: string;
 
-    @IsDate()
+   /* @IsDate()
     @IsOptional()
     createdAt!: Date;
 
     @IsDate()
     @IsOptional()
-    updatedAt!: Date;
+    updatedAt!: Date;*/
 }

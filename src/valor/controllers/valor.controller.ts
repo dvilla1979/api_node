@@ -22,6 +22,8 @@ type TypeSensor = {
     tipo_dato: SensorDato,
     tipo_sensor: SensorType,
     color_front: SensorColor,
+    max_grafico:number,
+    min_grafico:number,
     valores: TypeValor[];
    /* value: string | undefined,
     fecha_hora_value: string | undefined,*/
@@ -101,6 +103,8 @@ export class ValorController {
                         tipo_dato: sensor.tipo_dato,
                         tipo_sensor: sensor.tipo_sensor,
                         color_front: sensor.color_front,
+                        max_grafico: sensor.max_grafico,
+                        min_grafico: sensor.min_grafico,
                         valores: [{
                             fecha_hora_value: moment(data_valor?.fecha_hora_value).toDate().toISOString(),
                             value: data_valor?.value
@@ -175,6 +179,8 @@ export class ValorController {
                     tipo_dato: sensor.tipo_dato,
                     tipo_sensor: sensor.tipo_sensor,
                     color_front: sensor.color_front,
+                    max_grafico: sensor.max_grafico,
+                    min_grafico: sensor.min_grafico,
                     valores: valores
                 }
                 sensores.push(sen);
@@ -204,6 +210,22 @@ export class ValorController {
        /*     if (!data .affected) {
                 return this.httpresponse.NotFound(res, "Hay un error en actualizar");
             }*/
+            return this.httpresponse.OK(res, data);
+        }catch(err){
+            return this.httpresponse.Error(res, err);
+        }
+    }
+
+
+    async deleteValores(req: Request, res: Response){
+        const {sensor_id} = req.params; 
+        try{
+            console.log("hola desde borrar valores", sensor_id)
+
+            const data: DeleteResult = await this.valorService.deleteValoresSensor(sensor_id);
+            if (!data.affected) {
+                return this.httpresponse.NotFound(res, "Hay un error en borrar");
+            }
             return this.httpresponse.OK(res, data);
         }catch(err){
             return this.httpresponse.Error(res, err);

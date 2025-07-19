@@ -16,14 +16,24 @@ export class ValorService extends BaseService<ValorEntity> {
             .getMany();
     }
 
-    async findUltimoValorSensor(sensor: string): Promise<ValorEntity | null>{
+   /* async findUltimoValorSensor(sensor: string): Promise<ValorEntity | null>{
         return (await this.execRepository)
             .createQueryBuilder("valor")
             .leftJoinAndSelect("valor.sensor", "valores")
             .orderBy('fecha_hora_value', 'DESC')
             .where({sensor})
             .getOne();
+    }*/
+
+    async findUltimoValorSensor(sensorId: string): Promise<ValorEntity | null>{
+        return (await this.execRepository)
+            .createQueryBuilder('valor')
+            .where('valor.sensor_id = :sensorId', { sensorId })
+            .orderBy('valor.fecha_hora_value', 'DESC')
+            .limit(1)
+            .getOne();
     }
+
 
     async findValoresSensor(sensor: string, fechaInicio: Date, fechaFin: Date): Promise<ValorEntity[]>{
         return (await this.execRepository)
@@ -59,9 +69,20 @@ export class ValorService extends BaseService<ValorEntity> {
         .execute()
     }
 
+    async deleteValoresSensor(sensor_id: string):Promise<DeleteResult>{
+        console.log("",sensor_id)
+        return (await this.execRepository)
+        .createQueryBuilder()
+        .delete()
+        .from("valor")
+        .where("sensor_id = :sensor_id", { sensor_id })
+        .execute();
+    }
+
     async deleteValor(id: string):Promise<DeleteResult>{
         return (await this.execRepository).delete({id});
     }
+
 
     async updateValor(id: string, infoUpdate: ValorDTO):Promise<UpdateResult>{
         return (await this.execRepository).update(id, infoUpdate);

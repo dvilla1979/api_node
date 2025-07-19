@@ -4,10 +4,12 @@ import { DeleteResult, UpdateResult } from "typeorm";
 import { FrigorificoService } from "../../frigorifico/services/frigorifico.service";
 import { CamaraService } from "../../camara/services/camara.service";
 import { SensorService } from "../services/sensor.service";
+import { ValorService } from "../../valor/services/valor.service";
 
 export class SensorController {
     constructor(
         private readonly sensorService: SensorService = new SensorService(),
+        private readonly valorService: ValorService = new ValorService(),
         private readonly frigorificoService: FrigorificoService = new FrigorificoService(),
         private readonly camaraService: CamaraService = new CamaraService(),
         private readonly httpresponse: HttpResponse = new HttpResponse()
@@ -21,9 +23,9 @@ export class SensorController {
                 return this.httpresponse.NotFound(res, "No existe la camaras registrada");
             }
             const data = await this.sensorService.findAllSensorCamara(data_camara.id);
-            if (data.length === 0) {
+            /*if (data.length === 0) {
                 return this.httpresponse.NotFound(res, "No hay sensores registradas");
-            }
+            }*/
 
             return this.httpresponse.OK(res, data);
         }catch(err){
@@ -129,7 +131,7 @@ export class SensorController {
             const name_sensor = req.body.name_db as string; 
             const data_sensor = await this.sensorService.findSensorByName(data_camara.id, name_sensor);
             if (data_sensor) {
-                return this.httpresponse.Forbidden(res, "Ya existe el sensor registrado");
+                return this.httpresponse.NotAcceptable(res, "Ya existe el sensor registrado");
             }
             
             const data = await this.sensorService.createSensor(req.body);
@@ -156,6 +158,12 @@ export class SensorController {
     async deleteSensor(req: Request, res: Response){
         const {id} = req.params; 
         try{
+            //Primero se borran los valores que corresponden a ese sensor
+            const data_valores: DeleteResult = await this.valorService.deleteValoresSensor(id);
+            if (!data_valores.affected) {
+                return this.httpresponse.NotFound(res, "Hay un error en borrar los valores del sensor");
+            }
+            //Luego se borra el sensor
             const data: DeleteResult = await this.sensorService.deleteSensor(id);
             if (!data.affected) {
                 return this.httpresponse.NotFound(res, "Hay un error en borrar");

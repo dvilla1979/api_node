@@ -48,9 +48,14 @@ export class FrigorificoController {
 
 
     async createFrigorifico(req: Request, res: Response){
+        const {name} = req.body;
         try{
-            const data = await this.frigorificoService.createFrigorifico(req.body);
-            return this.httpresponse.OK(res, data);
+            const data = await this.frigorificoService.findFrigorificoByName(name);
+            if(data){
+                return this.httpresponse.NotAcceptable(res, "Ya existe el frigorifico");
+            }
+            const dataNew = await this.frigorificoService.createFrigorifico(req.body);
+            return this.httpresponse.OK(res, dataNew);
         }catch(err){
             return this.httpresponse.Error(res, err);
         }

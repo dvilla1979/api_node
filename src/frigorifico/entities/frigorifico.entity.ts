@@ -10,6 +10,10 @@ export class FrigorificoEntity extends BaseEntity {
     @Column()
     name!: string;
 
+    @Column()
+    ubicacion!: string;
+
+
     //Esta colomuna es interna y solo se utiliza para ordenar la lista para devolver las consultas
     @Index()
     @Column({default: "A"})

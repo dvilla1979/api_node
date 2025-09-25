@@ -14,6 +14,11 @@ export class SensorEntity extends BaseEntity {
     @Column()
     name_front!: string;
 
+    //Esta columna si es true el valor se almacena en la tabla online y 
+    // en la tabla de historicos en la base de datos cada vez que se lee un nuevo valor
+    @Column({default:true})
+    historico!: boolean;
+
     @Column({nullable: true})
     descripcion?: string;
 
@@ -23,6 +28,7 @@ export class SensorEntity extends BaseEntity {
     @Column({type: "enum", enum: SensorType, nullable: false})
     tipo_sensor!: SensorType;
 
+    //Representa el color de las curvas de los graficos
     @Column({type: "enum", enum: SensorColor, nullable: false})
     color_front!: SensorColor;
 
@@ -36,6 +42,26 @@ export class SensorEntity extends BaseEntity {
     @Index()
     @Column({default: "A"})
     orden!: string;
+    
+    //Son los valores que toman los sensores y SOLO se actualiza con el SCADA
+    @Column({ nullable: true })
+    value!: string;
+
+    //Es la fecha y hora en la que se actualizan los valores y SOLO se actualiza con el SCADA
+    @Column({ nullable: true })
+    fecha_hora_value!: Date;
+
+    //Esta Columna es el color de fondo para cuando el sensor es un estado
+    //Representa un color en cadena hexadecimal, por ejemplo #FFFFFF es blanco
+    //Solo se actualiza con el SCADA
+    @Column({nullable: true, default: "#FFFFFF"})
+    color_fondo?: string;
+
+    //Esta Columna es el color de fuente para cuando el sensor es un estado
+    //Representa un color en cadena hexadecimal, por ejemplo #000000 es negro
+    //Solo se actualiza con el SCADA
+    @Column({nullable: true, default: "#000000"})
+    color_fuente?: string;
 
     @ManyToOne(() => FrigorificoEntity, (frigorifico) => frigorifico.sensors)
     @JoinColumn({ name: "frigorifico_id" })

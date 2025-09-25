@@ -39,7 +39,9 @@ export class SensorService extends BaseService<SensorEntity> {
             .getOne();        
     }
 
+
     async createSensor(body: SensorDTO):Promise<SensorEntity>{
+        //console.log("Body de Create", body);
         return (await this.execRepository).save(body);
     }
 
@@ -49,7 +51,9 @@ export class SensorService extends BaseService<SensorEntity> {
     }
 
     async updateSensor(id: string, infoUpdate: SensorDTO):Promise<UpdateResult>{
+        //console.log("Info update", infoUpdate);
         return (await this.execRepository).update(id, infoUpdate);
     }
+
 
 }

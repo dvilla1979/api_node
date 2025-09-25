@@ -2,6 +2,7 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from "typeorm
 import { BaseEntity } from "../../config/base.entity";
 import { FrigorificoEntity } from "../../frigorifico/entities/frigorifico.entity";
 import { SensorEntity } from "../../sensor/entities/sensor.entity";
+import { CamaraType } from "../dto/camara.dto";
 
 @Entity({name: "camara"})
 export class CamaraEntity extends BaseEntity {
@@ -13,6 +14,9 @@ export class CamaraEntity extends BaseEntity {
     @Index()
     @Column({default: "A"})
     orden!: string;
+
+    @Column({type: "enum", enum: CamaraType, nullable: false})
+    tipo_camara!: CamaraType;
 
     @ManyToOne(() => FrigorificoEntity, (frigorifico) => frigorifico.camaras)
     @JoinColumn({ name: "frigorifico_id" })

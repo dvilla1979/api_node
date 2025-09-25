@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { validate } from "class-validator";
-import { HttpResponse } from "../../shared/response/http.response";
 import { SensorDTO } from "../dto/sensor.dto";
 import { SharedMiddleware } from "../../shared/middlewares/shared.middleware";
 
@@ -14,7 +13,11 @@ export class SensorMiddleware  extends SharedMiddleware {
 }
 
     sensorValidator(req: Request, res: Response, next: NextFunction){
-        const {name_db, name_front, descripcion, tipo_dato, tipo_sensor, color_front, max_grafico, min_grafico, orden} =
+
+        console.log("Sensor Validator", req.body);
+
+        const {name_db, name_front, descripcion, tipo_dato, tipo_sensor, color_front, max_grafico, min_grafico, 
+            orden, historico, value, fecha_hora_value, color_fondo, color_fuente } =
             req.body;
         const valid = new SensorDTO();
 
@@ -27,10 +30,15 @@ export class SensorMiddleware  extends SharedMiddleware {
         valid.max_grafico = max_grafico;
         valid.min_grafico = min_grafico;
         valid.orden = orden;
-        
+        valid.historico = historico;
+        valid.value = value;
+        valid.fecha_hora_value = fecha_hora_value;
+        valid.color_fondo = color_fondo;
+        valid.color_fuente = color_fuente;
+
         validate(valid).then((err)=>{
             if (err.length > 0) {
-                return this.httpResponse.NotAcceptable(res, "Faltan datos o son invalidos")
+                return this.httpResponse.NotAcceptable(res, "Faltan datos o son invalidos con error " + err )
             }
             else {
                 next();

@@ -1,12 +1,34 @@
 import { DeleteResult, UpdateResult, InsertResult } from "typeorm";
 import { BaseService } from "../../config/base.service";
-import { ValorEntity } from "../entities/valor.entity";
+import { ValorEntity } from '../entities/valor.entity';
 import { ValorDTO } from "../dto/valor.dto";
+import { ConfigServer } from "../../config/config";
+import { EntityTarget, ObjectLiteral, Repository } from "typeorm";
 
-export class ValorService extends BaseService<ValorEntity> {
+//ESTO 
+/*export class ValorService extends BaseService<ValorEntity> {
     constructor(){
         super(ValorEntity)
     }
+*/
+//HASTA ACA
+
+//SE REEMPLAZA
+export class ValorService extends ConfigServer  {
+
+  public execRepository: Promise<Repository<ValorEntity>>;
+
+  constructor() {
+    super();
+    this.execRepository = this.initRepository(ValorEntity);
+  }
+
+  async initRepository(entity: typeof ValorEntity): Promise<Repository<ValorEntity>> {
+    const conn = await this.initConnect;
+    return conn.getRepository(entity);
+  }
+
+//POR ACA
 
     async findAllValoresSensor(sensor: string): Promise<ValorEntity[]>{
         return (await this.execRepository)
@@ -35,7 +57,7 @@ export class ValorService extends BaseService<ValorEntity> {
     }
 
 
-    async findValoresSensor(sensor: string, fechaInicio: Date, fechaFin: Date): Promise<ValorEntity[]>{
+   /* async findValoresSensor(sensor: string, fechaInicio: Date, fechaFin: Date): Promise<ValorEntity[]>{
         return (await this.execRepository)
             .createQueryBuilder("valor")
             .leftJoinAndSelect("valor.sensor", "valores")
@@ -44,8 +66,18 @@ export class ValorService extends BaseService<ValorEntity> {
             .andWhere("fecha_hora_value >= :pfechaInicio AND fecha_hora_value <= :pfechaFin")
             .orderBy('fecha_hora_value', 'ASC')
             .getMany();
-    }
+    }*/
 
+   async findValoresSensor(sensor: string, fechaInicio: Date, fechaFin: Date): Promise<ValorEntity[]>{
+        return (await this.execRepository)
+            .createQueryBuilder("valor")
+            .leftJoinAndSelect("valor.sensor", "valores")
+            .setParameters({pfechaInicio: fechaInicio, pfechaFin: fechaFin})
+            .where({sensor_id:sensor})
+            .andWhere("valor.fecha_hora_value >= :pfechaInicio AND valor.fecha_hora_value <= :pfechaFin")
+            .orderBy('valor.fecha_hora_value', 'ASC')
+            .getMany();
+    }
 
     async findValorById(sensor: string, id: string):Promise<ValorEntity | null>{
         return (await this.execRepository)
@@ -79,9 +111,9 @@ export class ValorService extends BaseService<ValorEntity> {
         .execute();
     }
 
-    async deleteValor(id: string):Promise<DeleteResult>{
+   /* async deleteValor(id: string):Promise<DeleteResult>{
         return (await this.execRepository).delete({id});
-    }
+    }*/
 
 
     async updateValor(id: string, infoUpdate: ValorDTO):Promise<UpdateResult>{

@@ -13,13 +13,14 @@ export class FrigorificoMiddleware extends SharedMiddleware {
         super();
     }
     frigorificoValidator(req: Request, res: Response, next: NextFunction){
-        const { name, orden } =
+        const { name, ubicacion, orden } =
             req.body;
         
 
         const valid = new FrigorificoDTO();
 
         valid.name = name;
+        valid.ubicacion = ubicacion;
         valid.orden = orden;
         
         validate(valid).then((err)=>{

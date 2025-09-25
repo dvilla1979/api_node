@@ -5,6 +5,18 @@ import { FrigorificoService } from "../../frigorifico/services/frigorifico.servi
 import { CamaraService } from "../../camara/services/camara.service";
 import { SensorService } from "../services/sensor.service";
 import { ValorService } from "../../valor/services/valor.service";
+import moment from "moment";
+import { ValorDTO } from "../../valor/dto/valor.dto";
+
+type TypeValoresSensores = {
+    sensor: string,
+    fecha_hora_value: Date,
+    value: string,
+    tagName: string
+    color_fondo: string,
+    color_fuente: string,
+}
+
 
 export class SensorController {
     constructor(
@@ -116,7 +128,6 @@ export class SensorController {
 
     async createSensor(req: Request, res: Response){
         try{
-            console.log("req.body", req.body);
             const frio_id:string = req.body.frigorifico as string; 
             const data_frio = await this.frigorificoService.findFrigorificoById(frio_id);
             if (!data_frio) {
@@ -142,14 +153,99 @@ export class SensorController {
     }
 
     async updateSensor(req: Request, res: Response){
-        const {id} = req.params; 
+
+        const {id} = req.params;
         try{
             const data: UpdateResult = await this.sensorService.updateSensor(id, req.body);
             if (!data.affected) {
-                return this.httpresponse.NotFound(res, "Hay un error en actualizar");
+                return this.httpresponse.NotFound(res, "Hay un error en actualizar los datos del sensor");
             }
             return this.httpresponse.OK(res, data);
         }catch(err){
+            return this.httpresponse.Error(res, err);
+        }
+    }
+
+
+
+    async updateValoresSensores(req: Request, res: Response){
+
+        //En el body se recibe una lista con todos los sensores con sus nuevos valores para actualizar
+        //si la marca hisotrico es true y la fecha_hora_value es mayor 
+        //a la almacenada -> crea un nueva valor en la tabla de valores historicos 
+
+        var resultado: string = "";
+        var error:boolean = false;
+
+        try{
+            const valoresSensores:TypeValoresSensores[]  = req.body as TypeValoresSensores[]; 
+
+            for(const valorSensor of valoresSensores) {
+
+
+                const data_sensor = await this.sensorService.findSensorById(valorSensor.sensor);
+
+
+                if (data_sensor) {
+
+                     if(data_sensor.historico) {
+                        //Actualiza valor en la tabla de valores hisotricos
+                        
+                        if (moment(valorSensor.fecha_hora_value).isAfter(moment(data_sensor.fecha_hora_value))) {
+
+                            try {
+                                const valor: ValorDTO = {
+                                    sensor_id: valorSensor.sensor,
+                                    fecha_hora_value: valorSensor.fecha_hora_value,
+                                    value: valorSensor.value,          
+                                };
+                                await this.valorService.createValor(valor/*valorSensor as any*/);
+                            }catch(err){
+                                error = true;
+                                resultado = resultado + "El sensor " + valorSensor.tagName + " dio error al crear nuevo valor" + err + "<br>"  
+                              }                                
+                        }
+                     }
+
+                     data_sensor.value = valorSensor.value;
+                     data_sensor.fecha_hora_value = valorSensor.fecha_hora_value;
+                     data_sensor.color_fondo = valorSensor.color_fondo;
+                     data_sensor.color_fuente = valorSensor.color_fuente;
+
+                     try{
+                        //Actualiza valor actual en la tabla del sensor
+
+                        const data: UpdateResult = await this.sensorService.updateSensor(data_sensor.id, 
+                            {
+                                value: data_sensor.value,
+                                fecha_hora_value: data_sensor.fecha_hora_value,
+                                color_fondo: data_sensor.color_fondo,
+                                color_fuente: data_sensor.color_fuente
+                            } as any);
+
+                        if (!data.affected) {
+                            error = true;
+                            resultado = resultado + "El sensor " + valorSensor.tagName + " no pudo ser actualizado el valor <br>"    
+                            console.log("Error  update", resultado)
+                        }
+                    }catch(err){
+                        error = true;
+                        resultado = resultado + "El sensor " + valorSensor.tagName + " no pudo ser actualizado el valor con error " + err + "<br>"    
+                    }   
+                } else {
+                    error = true;
+                    resultado = resultado + "El sensor " + valorSensor.tagName + " no esta registrado <br>"    
+                }
+            }
+
+            if (error) {
+                return this.httpresponse.Error(res, resultado);
+            } else {
+                return this.httpresponse.OK(res, "Se actualizaron todos los sensores");
+            }   
+
+        }catch(err){
+            console.log("Error  crear", resultado)
             return this.httpresponse.Error(res, err);
         }
     }
@@ -160,9 +256,9 @@ export class SensorController {
         try{
             //Primero se borran los valores que corresponden a ese sensor
             const data_valores: DeleteResult = await this.valorService.deleteValoresSensor(id);
-            if (!data_valores.affected) {
-                return this.httpresponse.NotFound(res, "Hay un error en borrar los valores del sensor");
-            }
+            /*if (!data_valores.affected) {
+               // return this.httpresponse.NotFound(res, "Hay un error en borrar los valores del sensor");
+            }*/
             //Luego se borra el sensor
             const data: DeleteResult = await this.sensorService.deleteSensor(id);
             if (!data.affected) {

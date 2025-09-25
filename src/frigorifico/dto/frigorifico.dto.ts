@@ -6,5 +6,8 @@ export class FrigorificoDTO extends BaseDTO {
     name!: string;
 
     @IsNotEmpty()
+    ubicacion!: string;
+
+    @IsNotEmpty()
     orden!: string;
 }

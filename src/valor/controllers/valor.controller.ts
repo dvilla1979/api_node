@@ -5,9 +5,11 @@ import { ValorService } from "../services/valor.service";
 import { SensorService } from "../../sensor/services/sensor.service";
 import { FrigorificoService } from "../../frigorifico/services/frigorifico.service";
 import { CamaraService } from "../../camara/services/camara.service";
-import { SensorEntity } from "../../sensor/entities/sensor.entity";
+//import { SensorEntity } from '../../sensor/entities/sensor.entity';
 import { SensorColor, SensorDato, SensorType } from "../../sensor/dto/sensor.dto";
 import moment from 'moment';
+import { ValorDTO } from "../dto/valor.dto";
+import { CamaraType } from "../../camara/dto/camara.dto";
 
 type TypeValor = {
     fecha_hora_value: string | undefined,
@@ -24,7 +26,9 @@ type TypeSensor = {
     color_front: SensorColor,
     max_grafico:number,
     min_grafico:number,
-    valores: TypeValor[];
+    color_fondo: string | undefined,
+    color_fuente: string | undefined,
+    valores: TypeValor[],
    /* value: string | undefined,
     fecha_hora_value: string | undefined,*/
 }
@@ -32,6 +36,7 @@ type TypeSensor = {
 type TypeCamaras = {
     id: string,
     name: string,
+    tipo: CamaraType,
     sensores: TypeSensor[]
 }
 
@@ -93,7 +98,7 @@ export class ValorController {
                 const sensores: TypeSensor[] = [];
 
                 for(const sensor of data_sensor) {
-                    const data_valor = await this.valorService.findUltimoValorSensor(sensor.id);
+                    //const data_valor = await this.valorService.findUltimoValorSensor(sensor.id);
 
                     const sen:TypeSensor = {
                         id: sensor.id,
@@ -105,10 +110,12 @@ export class ValorController {
                         color_front: sensor.color_front,
                         max_grafico: sensor.max_grafico,
                         min_grafico: sensor.min_grafico,
+                        color_fondo: sensor.color_fondo,
+                        color_fuente: sensor.color_fuente,
                         valores: [{
-                            fecha_hora_value: moment(data_valor?.fecha_hora_value).toDate().toISOString(),
-                            value: data_valor?.value
-                        }]
+                            fecha_hora_value: moment(sensor.fecha_hora_value).toDate().toISOString(),
+                            value: sensor.value
+                        }],
                         /*value: data_valor?.value,
                         fecha_hora_value: moment(data_valor?.fecha_hora_value).add("-03:00").toDate().toISOString()*/
                     }
@@ -117,6 +124,7 @@ export class ValorController {
                 camaras.push({
                     id: camara.id,
                     name: camara.name,
+                    tipo: camara.tipo_camara,
                     sensores: sensores
                 })
             }
@@ -158,35 +166,54 @@ export class ValorController {
             const sensores: TypeSensor[] = [];
 
             for(const sensor of data_sensor) {
-                const data_valor = await this.valorService.findValoresSensor(sensor.id, fechaInicio! , fechaFin!);
 
-                const valores: TypeValor[] = [];
+               /* console.log("sensor id", sensor.id);
+                console.log("fechaInicio", fechaInicio);
+                console.log("fechaFin", fechaFin);*/
 
-                for(const valor of data_valor) {
-                    valores.push(
-                        {
-                            fecha_hora_value: moment(valor?.fecha_hora_value).toDate().toISOString(),                                    
-                            value: valor?.value,
-                        }
-                    )
+                //Solo devuelve los sensores que tienen habilitada la opcion de historico
+                if (sensor.historico) { 
+
+                    const data_valor = await this.valorService.findValoresSensor(sensor.id, fechaInicio! , fechaFin!);
+
+
+                    const valores: TypeValor[] = [];
+
+                    for(const valor of data_valor) {
+
+                        valores.push(
+                            {
+                                fecha_hora_value: moment(valor?.fecha_hora_value).toDate().toISOString(),                                    
+                                value: valor?.value,
+                            }
+                        )
+                        
+                    }
+
+                    // console.log("valores []", valores);  
+                    
+                    const sen:TypeSensor = {
+                        id: sensor.id,
+                        name_db: sensor.name_db,
+                        name_front: sensor.name_front,
+                        descripcion: sensor.descripcion,
+                        tipo_dato: sensor.tipo_dato,
+                        tipo_sensor: sensor.tipo_sensor,
+                        color_front: sensor.color_front,
+                        max_grafico: sensor.max_grafico,
+                        min_grafico: sensor.min_grafico,
+                        color_fondo: sensor.color_fondo,
+                        color_fuente: sensor.color_fuente,                        
+                        valores: valores
+                    }
+                    sensores.push(sen);
                 }
-                
-                const sen:TypeSensor = {
-                    id: sensor.id,
-                    name_db: sensor.name_db,
-                    name_front: sensor.name_front,
-                    descripcion: sensor.descripcion,
-                    tipo_dato: sensor.tipo_dato,
-                    tipo_sensor: sensor.tipo_sensor,
-                    color_front: sensor.color_front,
-                    max_grafico: sensor.max_grafico,
-                    min_grafico: sensor.min_grafico,
-                    valores: valores
-                }
-                sensores.push(sen);
             }
 
             const data = sensores;
+
+          //  console.log("data", data);
+
                             
             return this.httpresponse.OK(res, data);
         }catch(err){
@@ -197,7 +224,16 @@ export class ValorController {
 
     async createValor(req: Request, res: Response){
         try{
-            const data = await this.valorService.createValor(req.body);
+
+            const valor: ValorDTO = {
+                    sensor_id: req.body.sensor ,
+                    fecha_hora_value: req.body.fecha_hora_value,
+                    value: req.body.value,          
+            };
+
+           // console.log("Valor", valor)
+
+            const data = await this.valorService.createValor(valor/*req.body*/);
             return this.httpresponse.OK(res, data);
         }catch(err){
             return this.httpresponse.Error(res, err);
@@ -205,6 +241,10 @@ export class ValorController {
     }
 
     async createValores(req: Request, res: Response){
+
+        //Se crea un array con los valores de sensores que no se tienen 
+
+
         try{
             const data:InsertResult = await this.valorService.createValores(req.body);
        /*     if (!data .affected) {

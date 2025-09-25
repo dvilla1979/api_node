@@ -24,8 +24,9 @@ export class FrigorificoRouter extends BaseRouter<FrigorificoController, Frigori
             (req, res, next) => this.middleWare.frigorificoValidator(req, res, next),
             (req, res) => this.controller.createFrigorifico(req, res)
         );
-        this.router.put('/updateFrigorifico/:id', (req, res) => 
-            this.controller.updateFrigorifico(req, res)
+        this.router.put(
+            '/updateFrigorifico/:id', 
+            (req, res) => this.controller.updateFrigorifico(req, res)
         );
         this.router.delete('/deleteFrigorifico/:id', (req, res) => 
             this.controller.deleteFrigorifico(req, res)

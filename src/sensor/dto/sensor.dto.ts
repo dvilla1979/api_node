@@ -61,20 +61,25 @@ export enum SensorDato{
 
 export enum SensorType{
     TEMPERATURA = "TEMPERATURA", //Valor de Temepratura en ºC -> REAL_DIV_10
+    SET_POINT_TEMPERATURA = "SET_POINT_TEMPERATURA", //Valor de Set Point de Temepratura en ºC -> REAL_DIV_10
     HUMEDAD = "HUMEDAD", //Valor de Humedad en % -> REAL_DIV_10
     PRESION = "PRESION", //Valor de Presion en Bar -> REAL_DIV_10
+    SET_POINT_PRESION = "SET_POINT_PRESION", //Valor de Set Point de Presion en Bar -> REAL_DIV_10
     CAPACIDAD = "CAPACIDAD", //Valor de Capacidad en % -> INT16
     POTENCIA = "POTENCIA", //Valor de Potencia en KW -> INT32
+    SET_POTENCIA = "SET_POTENCIA", //Valor de Set Point de Potencia en KW -> INT32
     TENSION = "TENSION", //Valor de Tension en V -> INT32
     CORRIENTE = "CORRIENTE", //Valor de Corriente en A -> INT32
     COSENO_PHI = "COSENO_PHI", //Valor de Cosenso Phi -> REAL
     VELOCIDAD_HZ = "VELOCIDAD_HZ", //Valor de Velocidad en Hz -> REAL_DIV_10
     VELOCIDAD_100 = "VELOCIDAD_100", //Valor de Velocidad en % -> INT16
+    APERTURA_VALVULA = "APERTURA_VALVULA", //Valor de Apertura Valvula Capacidad en % -> INT16
     MENSAJE_FUNCIONAMIENTO = "MENSAJE_FUNCIONAMIENTO", //Mensaje general de funcionamiento de Camaras, Sala de Maquinas, etc. -> STRING
     ESTADO_VENTILADORES = "ESTADO_VENTILADORES", // ON-OFF Ventiladores -> BOOLEAN 
     ESTADO_SOL_ASPIRACION = "ESTADO_SOL_ASPIRACION", // ON-OFF Sol. de Aspiracion -> BOOLEAN 
     ESTADO_SOL_LIQUIDO = "ESTADO_SOL_LIQUIDO", // ON-OFF Sol. de Liquido -> BOOLEAN 
     ESTADO_SOL_DESHIELO = "ESTADO_SOL_DESHIELO", // ON-OFF Sol. de Deshielo -> BOOLEAN 
+    ESTADO_VALVULA = "ESTADO_VALVULA", // ON-OFF Vavula -> BOOLEAN 
     ESTADO_COMPRESOR = "ESTADO_COMPRESOR", // ON-OFF Motor Compresor -> BOOLEAN 
     ESTADO_TORNILLO = "ESTADO_TORNILLO", // ON-OFF Motor Compresor Tornillo-> BOOLEAN 
     ESTADO_BOMBA = "ESTADO_BOMBA", // ON-OFF Motor Bomba  -> BOOLEAN 
